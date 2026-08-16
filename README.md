@@ -6,7 +6,7 @@
 
 ---
 
-## 📁 File Structure
+## File Structure
 
 ```
 hackiton-coming-soon/
@@ -22,7 +22,7 @@ hackiton-coming-soon/
 
 ---
 
-## 🚀 Deploy to Vercel
+## Deploy to Vercel
 
 ### Option A — Vercel CLI
 
@@ -41,7 +41,7 @@ vercel
 
 ---
 
-## 🌐 Custom Domain — hackiton.in (BigRock)
+## Custom Domain — hackiton.in (BigRock)
 
 After deploying on Vercel:
 
@@ -52,11 +52,11 @@ After deploying on Vercel:
 5. Wait 15–60 minutes for propagation
 6. Verify at `https://hackiton.in`
 
-> ⚠️ Do NOT delete existing BigRock DNS records unless Vercel specifically requires it.
+> Do NOT delete existing BigRock DNS records unless Vercel specifically requires it.
 
 ---
 
-## ✅ Checklist
+##  Checklist
 
 - [x] InvaderZ logo in circular frame at top
 - [x] Chad cat centered with gold glow
@@ -78,7 +78,7 @@ After deploying on Vercel:
 
 ---
 
-## 🎨 Design System
+## Design System
 
 | Token | Value |
 |---|---|
