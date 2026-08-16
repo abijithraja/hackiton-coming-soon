@@ -9,6 +9,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Remove blue tap flash on Android Chrome */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ----------------------------------------------------------
@@ -23,9 +25,9 @@
   --gold-glow:      rgba(232, 184, 75, 0.25);
   --cyan:           rgba(56, 189, 199, 0.08);
   --white:          #F0EEE9;
-  --muted:          rgba(240, 238, 233, 0.45);
-  --border:         rgba(232, 184, 75, 0.22);
-  --border-subtle:  rgba(255, 255, 255, 0.07);
+  --muted:          rgba(240, 238, 233, 0.62);  /* boosted for mobile readability */
+  --border:         rgba(232, 184, 75, 0.28);
+  --border-subtle:  rgba(255, 255, 255, 0.10);
   --shadow-card:    0 8px 48px rgba(0, 0, 0, 0.55);
   --shadow-cat:     0 20px 60px rgba(0, 0, 0, 0.65);
 
@@ -40,6 +42,9 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent font inflation on landscape mobile */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -47,8 +52,12 @@ body {
   background-color: var(--bg-base);
   color: var(--white);
   min-height: 100vh;
+  /* iOS Safari 100vh fix */
+  min-height: -webkit-fill-available;
   overflow-x: hidden;
   position: relative;
+  /* iOS momentum scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ----------------------------------------------------------
@@ -120,7 +129,11 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  padding: 56px 24px 0;
+  min-height: -webkit-fill-available;
+  /* Safe area insets for iOS notch + home bar */
+  padding: calc(56px + env(safe-area-inset-top)) 24px calc(env(safe-area-inset-bottom));
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
   gap: 0;
 }
 
@@ -258,10 +271,13 @@ body {
 
 .main-heading {
   font-family: var(--font-main);
-  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-size: clamp(1.75rem, 6vw, 3.4rem);
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.02em;
+  /* Prevent heading from breaking awkwardly on narrow phones */
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .heading-white {
@@ -333,6 +349,8 @@ body {
    12. Status Card
    ---------------------------------------------------------- */
 .status-card {
+  /* Solid fallback for browsers without backdrop-filter (older Android) */
+  background: rgba(12, 12, 14, 0.92);
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
@@ -344,7 +362,7 @@ body {
   align-items: center;
   gap: 12px;
   box-shadow: var(--shadow-card);
-  width: 100%;
+  width: calc(100% - 32px);
   max-width: 340px;
   margin-bottom: 40px;
   position: relative;
@@ -370,10 +388,10 @@ body {
 }
 
 .status-label {
-  font-size: 0.68rem;
+  font-size: 0.7rem;  /* min ~11px, safe on mobile */
   font-weight: 600;
-  letter-spacing: 0.16em;
-  color: var(--muted);
+  letter-spacing: 0.14em;
+  color: rgba(240, 238, 233, 0.55);
   text-transform: uppercase;
 }
 
@@ -399,13 +417,13 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 500;
-  color: rgba(240, 238, 233, 0.7);
-  background: rgba(232, 184, 75, 0.08);
-  border: 1px solid rgba(232, 184, 75, 0.18);
+  color: rgba(240, 238, 233, 0.82);  /* boosted for mobile */
+  background: rgba(232, 184, 75, 0.10);
+  border: 1px solid rgba(232, 184, 75, 0.25);
   border-radius: 100px;
-  padding: 5px 14px;
+  padding: 6px 16px;  /* slightly larger touch-friendly */
 }
 
 .badge-dot {
@@ -457,9 +475,9 @@ body {
 }
 
 .bottom-text {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 500;
-  color: var(--muted);
+  color: rgba(240, 238, 233, 0.68);  /* clearly visible on AMOLED */
   letter-spacing: 0.01em;
 }
 
@@ -480,33 +498,38 @@ body {
 }
 
 .brand-year {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.2em;
-  color: rgba(232, 184, 75, 0.55);
+  color: rgba(232, 184, 75, 0.70);  /* more visible on dark mobile screens */
   text-transform: uppercase;
 }
 
 .brand-apostrophe {
-  color: rgba(232, 184, 75, 0.55);
+  color: rgba(232, 184, 75, 0.70);
 }
 
 .brand-dot {
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.25);
   font-size: 0.8rem;
 }
 
 .brand-domain {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 500;
-  color: rgba(240, 238, 233, 0.3);
+  color: rgba(240, 238, 233, 0.50);  /* was 0.3 — too dim on mobile */
   text-decoration: none;
   letter-spacing: 0.05em;
   transition: color 0.25s ease;
+  /* Minimum tap target */
+  padding: 4px 2px;
+  display: inline-block;
 }
 
-.brand-domain:hover {
-  color: rgba(240, 238, 233, 0.65);
+.brand-domain:hover,
+.brand-domain:focus {
+  color: rgba(240, 238, 233, 0.80);
+  outline: none;
 }
 
 /* ----------------------------------------------------------
@@ -516,6 +539,8 @@ body {
   width: 100%;
   border-top: 1px solid var(--border-subtle);
   padding: 18px 24px;
+  /* iOS home bar safe area */
+  padding-bottom: calc(18px + env(safe-area-inset-bottom));
   text-align: center;
   position: relative;
   z-index: 2;
@@ -523,9 +548,9 @@ body {
 }
 
 .footer-text {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 400;
-  color: rgba(240, 238, 233, 0.2);
+  color: rgba(240, 238, 233, 0.38);  /* was 0.2 — near-invisible on mobile */
   letter-spacing: 0.03em;
 }
 
@@ -552,7 +577,9 @@ body {
    ---------------------------------------------------------- */
 @media (max-width: 768px) {
   .page-wrapper {
-    padding: 44px 20px 0;
+    padding-top: calc(44px + env(safe-area-inset-top));
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
   }
 
   .logo-ring {
@@ -566,7 +593,9 @@ body {
   }
 
   .cat-img {
-    width: min(300px, 88vw);
+    /* Use calc instead of min() for older Android WebViews */
+    width: 88vw;
+    max-width: 300px;
     border-radius: 18px;
   }
 
@@ -581,6 +610,7 @@ body {
   .status-card {
     padding: 24px 28px 20px;
     max-width: 300px;
+    width: calc(100% - 32px);
   }
 }
 
@@ -589,7 +619,9 @@ body {
    ---------------------------------------------------------- */
 @media (max-width: 480px) {
   .page-wrapper {
-    padding: 36px 16px 0;
+    padding-top: calc(36px + env(safe-area-inset-top));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
   }
 
   .logo-ring {
@@ -603,7 +635,8 @@ body {
   }
 
   .cat-img {
-    width: min(260px, 86vw);
+    width: 86vw;
+    max-width: 260px;
     border-radius: 14px;
   }
 
@@ -612,32 +645,62 @@ body {
   }
 
   .main-heading {
-    font-size: clamp(1.6rem, 9vw, 2.2rem);
+    /* 9vw gives ~1.7rem on 390px iPhone — comfortable and bold */
+    font-size: clamp(1.55rem, 9vw, 2.2rem);
+    line-height: 1.22;
   }
 
   .support-text {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
     margin-bottom: 28px;
+    padding: 0 4px;
   }
 
   .status-card {
-    padding: 22px 22px 18px;
+    padding: 22px 20px 18px;
+    width: calc(100% - 24px);
     max-width: 280px;
     border-radius: 14px;
+  }
+
+  .status-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
   }
 
   .status-main {
     font-size: 1.1rem;
   }
 
+  .status-badge {
+    font-size: 0.78rem;
+    padding: 5px 13px;
+  }
+
   .bottom-message {
     margin-bottom: 24px;
+  }
+
+  .bottom-text {
+    font-size: 0.88rem;
   }
 
   .brand-signature {
     margin-bottom: 40px;
     flex-wrap: wrap;
     justify-content: center;
+    gap: 8px;
+  }
+
+  .brand-year,
+  .brand-domain {
+    font-size: 0.72rem;
+  }
+
+  /* Ensure footer is safe from iOS home indicator */
+  .site-footer {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
   }
 }
 
@@ -646,16 +709,28 @@ body {
    ---------------------------------------------------------- */
 @media (max-width: 360px) {
   .main-heading {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
+    line-height: 1.25;
   }
 
   .cat-img {
-    width: min(220px, 84vw);
+    width: 84vw;
+    max-width: 220px;
   }
 
   .logo-ring {
     width: 76px;
     height: 76px;
+    padding: 9px;
+  }
+
+  .status-card {
+    padding: 18px 16px 16px;
+    width: calc(100% - 16px);
+  }
+
+  .support-text {
+    font-size: 0.88rem;
   }
 }
 
