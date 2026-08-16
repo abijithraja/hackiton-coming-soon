@@ -388,11 +388,11 @@ body {
 }
 
 .status-label {
-  font-size: 0.7rem;  /* min ~11px, safe on mobile */
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: rgba(240, 238, 233, 0.55);
-  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(240, 238, 233, 0.45);
+  /* no text-transform — it's casual lowercase now */
 }
 
 .status-main {
